@@ -10,6 +10,7 @@ var nanobus = require('nanobus')
 var assert = require('assert')
 
 var Cache = require('./component/cache')
+console.log(Cache)
 
 module.exports = Choo
 
