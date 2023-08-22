@@ -11,6 +11,7 @@ var assert = require('assert')
 
 var Cache = require('./component/cache')
 console.log(Cache)
+const a = 'abc'
 
 module.exports = Choo
 
