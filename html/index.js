@@ -1,1 +1,1 @@
-module.exports = require('nanohtml')
+module.exports = require("nanohtml");
