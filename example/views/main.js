@@ -1,21 +1,21 @@
-var html = require('nanohtml') // cannot require choo/html because it's a nested repo
+var html = require("nanohtml"); // cannot require choo/html because it's a nested repo
 
-var Header = require('../components/header')
-var Footer = require('../components/footer')
-var Todos = require('../components/todos')
-var Info = require('../components/info')
+var Header = require("../components/header");
+var Footer = require("../components/footer");
+var Todos = require("../components/todos");
+var Info = require("../components/info");
 
-module.exports = mainView
+module.exports = mainView;
 
-function mainView (state, emit) {
+function mainView(state, emit) {
   return html`
     <body>
       <section class="todoapp">
-        ${state.cache(Header, 'header').render()}
-        ${state.cache(Todos, 'todos').render()}
-        ${state.cache(Footer, 'footer').render()}
+        ${state.cache(Header, "header").render()}
+        ${state.cache(Todos, "todos").render()}
+        ${state.cache(Footer, "footer").render()}
       </section>
-      ${state.cache(Info, 'info').render()}
+      ${state.cache(Info, "info").render()}
     </body>
-  `
+  `;
 }

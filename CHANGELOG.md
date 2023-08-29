@@ -1,4 +1,5 @@
 ## `7.0.0` All the little things
+
 It has been quite a while since the last major version of Choo. Since it's
 release, `choo@6` has recieved a bunch of features and patches, but some changes
 has been put off because they'd have an affect on the API in a way that could be
@@ -8,7 +9,7 @@ breaking changes all at once.
 The way in which Choo handles hashes in the URL has proved confusing for both
 newcomers and seasoned Choo users. In a prior patch the `hash` option was added
 which could be used to disable hash routing. With this release we're changing it
-to be *disabled by default*.
+to be _disabled by default_.
 
 Rendering pages server side is an excellent way to increase page performance and
 Choo supports it out of the box. Choo also allows for rehydrating the client
@@ -43,6 +44,7 @@ polyfills.
 That's all for now, keep being awesome!
 
 ## `6.0.0` Same as it ever was
+
 In the past few months we've been able to use `choo@5` a bunch, and people seem
 to like it a lot! In this patch all we're doing is taking choo's existing API,
 and polishing the internals. In theory this means breaking changes, but in
@@ -80,6 +82,7 @@ Thanks heaps for reading this far, we hope you enjoy this release as much as we
 did building it. Happy coding! -Team Choo :sparkles:
 
 ## `5.1.0` Timing API support
+
 In order to improve, we must measure first. Specifically when it comes to
 framerate there are very specific numbers we can rely on: `~16ms` for any given
 frame to achieve 60fps. That's why in `5.1.0` we're adding support for the
@@ -103,12 +106,14 @@ For unsupported browser's there's a polyfill available at
 We hope you'll enjoy this release; thanks heaps for using choo!
 
 ### changes
+
 - added out of the box support for performance timings (`window.performance`)
 - updated `nanobus` to `3.0.0`; `'*'` events now run after named events
 
 ---
 
 ## `5.0.0` Welp Welp Welp
+
 So it turns out Choo could be radically simplified. We're now comfortably
 sitting at `~4kb`, have removed a whole bunch of words from the API and should
 be a whole lot faster. We've [written about it
@@ -142,6 +147,7 @@ literally nothing left to remove from the API tho so this is probably the last
 time we get to break anything in a significant way._
 
 ### changes
+
 - :exclamation: state is now mutable and renders are triggered through
   `.emit('render')`.
 - :exclamation: we've replaced `.use()`, `.model()` and the rest of the choo
@@ -163,6 +169,7 @@ time we get to break anything in a significant way._
 ---
 
 ## `4.0.0` The routing patch
+
 This patch changes the way we handle routes. It introduces query string
 support (!), and changes the router to use a lisp-like syntax. It also inverts
 the argument order of effects and reducers to be more intuitive. We also
@@ -170,6 +177,7 @@ managed to sneak in some performance upgrades :sparkles: - We hope you enjoy
 it!
 
 ### changes
+
 - :exclamation: slim down server side rendering API |
   [issue](https://github.com/yoshuawuyts/choo/issues/191) |
   [pull-request](https://github.com/yoshuawuyts/choo/pull/203)
@@ -194,17 +202,20 @@ it!
 ---
 
 ## `3.3.0`
+
 Yay, `plugins` now support `wrappers` which is a segway onto HMR, time travel
 and other cool plugins. These changes have come through in barracks `v8.3.0`
 and a lil fix in `v8.3.1`. This is a lil patch before `4.0.0` comes through,
 but should be super valuable. Wooh!
 
 ### changes
+
 - updated barracks to `v8.3.1`
 
 ---
 
 ## `3.2.0`
+
 Wooh, `plugins` are a first class citizen now thanks to the `.use()` API. It's
 a multiplexed version of the old `app = choo(hooks)`. It should enable
 attaching multiple hooks onto the same API, which is useful to create re-usable
@@ -213,30 +224,36 @@ as possible, but the docs should provide enough backdrop for that. Anyway,
 have fun with plugins! :tada:
 
 ### changes
+
 - added `app.use()`
 
 ---
 
 ## `3.1.0`
+
 And another patch down. This time around it's mostly maintenance and a bit of
 perf:
+
 - The addition of the [nanoraf](https://github.com/yoshuawuyts/nanoraf)
   dependency prevents bursts of DOM updates thrashing application performance,
   quite possibly making choo amongst the fastest frameworks out there.
 - We now ship standalone `UMD` bundles on each release, available through
   [https://unpkg.com/choo](https://unpkg.com/choo). The goal of this is to
-  support sites like codepen and the like; __this should not be used for
-  production__.
+  support sites like codepen and the like; **this should not be used for
+  production**.
 
 ---
 
 ## `3.0.0`
+
 Woooh, happy third birthday `choo` - _thanks dad_. You're all grown up now;
 look at how far you've come in the last month. You've grown... tinier? But yet
 you do more? I love you `choo` - _shut up dad_.
 
 ### Notable changes
+
 #### Who's the tiniest of them all?
+
 `choo` is now `5kb` optimized! That's `2kb` less compared to v2. _Woah, how?_
 We now support [yo-yoify](https://github.com/shama/yo-yoify) which optimizes
 those lil template tags to `document.createElement()` calls. So not only is it
@@ -244,6 +261,7 @@ smaller, creating elements now has no overhead. Pretty nifty eh? Mad shoutout
 to [Shama](http://twitter.com/shamakry) for building this!
 
 #### Captain Hook(s)
+
 V3 introduces `hooks` - powerful functions that are called at certain points in
 the refresh cycle. Unlike functions in `models` these functions have unfiltered
 access to all properties, call stacks and more. They're super useful when
@@ -251,6 +269,7 @@ building error handling, logging or persisting for stuff like `hot reloading`.
 I quite like them, and I'm def keen to see what uses people will come up with!
 
 #### Effect Composition :train::train::train::train:
+
 `effects` are now composable by calling a `done(err, res)` callback when
 they're done executing. This means that multiple namespaced effects can be
 chained together to form some higher level behavior.
@@ -260,6 +279,7 @@ invalidated on the server, all in a certain order. This requires multiple
 models to work in tandem. - And now that's possible! :sparkles:
 
 #### Pathfinders guide
+
 We've started work on the [choo
 handbook](https://github.com/yoshuawuyts/choo-handbook) - a lil manual to help
 you get started, not only with choo, but with web development in general. It's
@@ -271,6 +291,7 @@ might be neat to write. Any lil bits are welcome! Shout out to
 [Tim](https://twitter.com/timwis) for making this happen :tada:
 
 #### The Cycle of Life
+
 `views` have gone through a bit of a change - they're now required using
 `require('choo/html')` so they can be factored out of a project into standalone
 [bel](https://github.com/shama/bel) components at any time. But additionally
@@ -278,10 +299,11 @@ these components have gained super powers through the adition of `onload` and
 `onunload` hooks. Components can now react to being mounted or not, which makes
 them ideal to implement standalone widgets. This behavior uses [html5
 MutationObserver](https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver)
-under the hood, so it will work anywhere with a DOM!  Again, this was all
+under the hood, so it will work anywhere with a DOM! Again, this was all
 [Shama](http://twitter.com/shamakry)'s hard work.
 
 #### Test coverage
+
 `choo` has gained a beaut blanket of tests, courtesy of
 [Todd](https://twitter.com/whale_eat_squid) and
 [Ben](https://twitter.com/bendrucker/). We've got server, browser and
@@ -289,6 +311,7 @@ _pretty-much-all-browsers-known-to-mankind_ style testing which should give us
 a pretty good idea if stuff breaks. Neat!
 
 #### Core dump
+
 Internally we've moved the core of `choo` into a separate package -
 [barracks](https://github.com/yoshuawuyts/barracks). `choo` is now mere glue
 code around `barracks`, `yo-yo` and `sheet-router`. This is good news for folks
@@ -296,6 +319,7 @@ who like `choo`, but don't agree with all decisions. Go forth and build your
 own lil framework!
 
 ### Changelog
+
 - move `choo.view` out to `require('choo/html')` #71 | pr #103
 - streamline view API #35 | pr #111
 - higher order functions #34 | pr #104
@@ -308,6 +332,7 @@ own lil framework!
 - state is now immutable in `reducers` and `effects`
 
 ### Thanks
+
 Huge thanks to everyone who's collaborated on this, provided feedback or
 even mentioned it anywhere. It's been a hella lot of people, but seriously,
 you're the best :steam_locomotive::train::train::train::train::train:
@@ -315,11 +340,13 @@ you're the best :steam_locomotive::train::train::train::train::train:
 ---
 
 ## `2.3.1`
+
 - [76](https://github.com/yoshuawuyts/choo/pull/76) - fix router arguments
 
 ---
 
 ## `2.3.0`
+
 - [55](https://github.com/yoshuawuyts/choo/pull/55) - load subscriptions once
   DOM is ready
 - heaps of documentation fixes; looks like choo is taking off 🐨
@@ -327,6 +354,7 @@ you're the best :steam_locomotive::train::train::train::train::train:
 ---
 
 ## `2.2.2`
+
 - [53](https://github.com/yoshuawuyts/choo/pull/53) - fix assert call for
   subscriptions
 - [52](https://github.com/yoshuawuyts/choo/pull/52) - fix naming rootId
@@ -334,7 +362,9 @@ you're the best :steam_locomotive::train::train::train::train::train:
 ---
 
 ## `2.0.0`
+
 ### breaking changes
+
 - namespaces are now enforced more strictly
 - models now only accept a single argument
 - the `namespace` key was introduced inside of models (was prior the leading
@@ -344,4 +374,5 @@ you're the best :steam_locomotive::train::train::train::train::train:
 ---
 
 ## `1.0.0`
+
 - first version of choo

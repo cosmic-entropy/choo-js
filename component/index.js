@@ -1,1 +1,1 @@
-module.exports = require('nanocomponent')
+module.exports = require("nanocomponent");

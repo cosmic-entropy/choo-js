@@ -1,15 +1,15 @@
-var html = require('nanohtml')
+var html = require("nanohtml");
 
-module.exports = deleteCompleted
+module.exports = deleteCompleted;
 
-function deleteCompleted (emit) {
+function deleteCompleted(emit) {
   return html`
     <button class="clear-completed" onclick=${deleteAllCompleted}>
       Clear completed
     </button>
-  `
+  `;
 
-  function deleteAllCompleted () {
-    emit('todos:deleteCompleted')
+  function deleteAllCompleted() {
+    emit("todos:deleteCompleted");
   }
 }

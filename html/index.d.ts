@@ -1,2 +1,2 @@
-import * as nanohtml from "nanohtml"
-export = nanohtml
+import * as nanohtml from "nanohtml";
+export = nanohtml;

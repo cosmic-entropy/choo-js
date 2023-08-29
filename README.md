@@ -86,6 +86,7 @@
 </div>
 
 ## Table of Contents
+
 - [Features](#features)
 - [Example](#example)
 - [Philosophy](#philosophy)
@@ -102,49 +103,53 @@
 - [Support](#support)
 
 ## Features
-- __minimal size:__ weighing `4kb`, Choo is a tiny little framework
-- __event based:__ our performant event system makes writing apps easy
-- __small api:__ with only 6 methods there's not much to learn
-- __minimal tooling:__ built for the cutting edge `browserify` compiler
-- __isomorphic:__ renders seamlessly in both Node and browsers
-- __very cute:__ choo choo!
+
+- **minimal size:** weighing `4kb`, Choo is a tiny little framework
+- **event based:** our performant event system makes writing apps easy
+- **small api:** with only 6 methods there's not much to learn
+- **minimal tooling:** built for the cutting edge `browserify` compiler
+- **isomorphic:** renders seamlessly in both Node and browsers
+- **very cute:** choo choo!
 
 ## Example
+
 ```js
-var html = require('choo/html')
-var devtools = require('choo-devtools')
-var choo = require('choo')
+var html = require("choo/html");
+var devtools = require("choo-devtools");
+var choo = require("choo");
 
-var app = choo()
-app.use(devtools())
-app.use(countStore)
-app.route('/', mainView)
-app.mount('body')
+var app = choo();
+app.use(devtools());
+app.use(countStore);
+app.route("/", mainView);
+app.mount("body");
 
-function mainView (state, emit) {
+function mainView(state, emit) {
   return html`
     <body>
       <h1>count is ${state.count}</h1>
       <button onclick=${onclick}>Increment</button>
     </body>
-  `
+  `;
 
-  function onclick () {
-    emit('increment', 1)
+  function onclick() {
+    emit("increment", 1);
   }
 }
 
-function countStore (state, emitter) {
-  state.count = 0
-  emitter.on('increment', function (count) {
-    state.count += count
-    emitter.emit('render')
-  })
+function countStore(state, emitter) {
+  state.count = 0;
+  emitter.on("increment", function (count) {
+    state.count += count;
+    emitter.emit("render");
+  });
 }
 ```
+
 Want to see more examples? Check out the [Choo handbook][handbook].
 
 ## Philosophy
+
 We believe programming should be fun and light, not stern and stressful. It's
 cool to be cute; using serious words without explaining them doesn't make for
 better results - if anything it scares people off. We don't want to be scary,
@@ -166,6 +171,7 @@ easy to reason about. All of which makes for easy to debug code, better results
 and super smiley faces.
 
 ## Events
+
 At the core of Choo is an event emitter, which is used for both application
 logic but also to interface with the framework itself. The package we use for
 this is [nanobus](https://github.com/choojs/nanobus).
@@ -181,34 +187,40 @@ the Choo framework itself. All events can be read as constants from
 `state.events`. Choo ships with the following events built in:
 
 ### `'DOMContentLoaded'`|`state.events.DOMCONTENTLOADED`
+
 Choo emits this when the DOM is ready. Similar to the DOM's
 `'DOMContentLoaded'` event, except it will be emitted even if the listener is
 added _after_ the DOM became ready. Uses
 [document-ready](https://github.com/bendrucker/document-ready) under the hood.
 
 ### `'render'`|`state.events.RENDER`
+
 This event should be emitted to re-render the DOM. A common pattern is to
 update the `state` object, and then emit the `'render'` event straight after.
 Note that `'render'` will only have an effect once the `DOMContentLoaded` event
 has been fired.
 
 ### `'navigate'`|`state.events.NAVIGATE`
+
 Choo emits this event whenever routes change. This is triggered by either
 `'pushState'`, `'replaceState'` or `'popState'`.
 
 ### `'pushState'`|`state.events.PUSHSTATE`
+
 This event should be emitted to navigate to a new route. The new route is added
 to the browser's history stack, and will emit `'navigate'` and `'render'`.
 Similar to
 [history.pushState](http://devdocs.io/dom/history_api).
 
 ### `'replaceState'`|`state.events.REPLACESTATE`
+
 This event should be emitted to navigate to a new route. The new route replaces
 the current entry in the browser's history stack, and will emit `'navigate'`
 and `'render'`. Similar to
 [history.replaceState](http://devdocs.io/dom/history#history-replacestate).
 
 ### `'popState'`|`state.events.POPSTATE`
+
 This event is emitted when the user hits the 'back' button in their browser.
 The new route will be a previous entry in the browser's history stack, and
 immediately afterward the`'navigate'` and `'render'`events will be emitted.
@@ -218,13 +230,15 @@ that `emit('popState')` will _not_ cause a popState action - use
 and `replaceState`!)
 
 ### `'DOMTitleChange'`|`state.events.DOMTITLECHANGE`
+
 This event should be emitted whenever the `document.title` needs to be updated.
-It will set both `document.title` and `state.title`.  This value can be used
+It will set both `document.title` and `state.title`. This value can be used
 when server rendering to accurately include a `<title>` tag in the header.
 This is derived from the
 [DOMTitleChanged event](https://developer.mozilla.org/en-US/docs/Web/Events/DOMTitleChanged).
 
 ## State
+
 Choo comes with a shared state object. This object can be mutated freely, and
 is passed into the view functions whenever `'render'` is emitted. The state
 object comes with a few properties set.
@@ -234,56 +248,69 @@ the initial state. This is especially useful when combined with server
 rendering. See [server rendering](#server-rendering) for more details.
 
 ### `state.events`
+
 A mapping of Choo's built in events. It's recommended to extend this object
 with your application's events. By defining your event names once and setting
 them on `state.events`, it reduces the chance of typos, generally autocompletes
 better, makes refactoring easier and compresses better.
 
 ### `state.params`
+
 The current params taken from the route. E.g. `/foo/:bar` becomes available as
 `state.params.bar` If a wildcard route is used (`/foo/*`) it's available as
 `state.params.wildcard`.
 
 ### `state.query`
+
 An object containing the current queryString. `/foo?bin=baz` becomes `{ bin:
 'baz' }`.
 
 ### `state.href`
+
 An object containing the current href. `/foo?bin=baz` becomes `/foo`.
 
 ### `state.route`
+
 The current name of the route used in the router (e.g. `/foo/:bar`).
 
 ### `state.title`
+
 The current page title. Can be set using the `DOMTitleChange` event.
 
 ### `state.components`
+
 An object _recommended_ to use for local component state.
 
 ### `state.cache(Component, id, [...args])`
+
 Generic class cache. Will lookup Component instance by id and create one if not
 found. Useful for working with stateful [components](#components).
 
 ## Routing
+
 Choo is an application level framework. This means that it takes care of
 everything related to routing and pathnames for you.
 
 ### Params
+
 Params can be registered by prepending the route name with `:routename`, e.g.
 `/foo/:bar/:baz`. The value of the param will be saved on `state.params` (e.g.
 `state.params.bar`). Wildcard routes can be registered with `*`, e.g. `/foo/*`.
 The value of the wildcard will be saved under `state.params.wildcard`.
 
 ### Default routes
+
 Sometimes a route doesn't match, and you want to display a page to handle it.
 You can do this by declaring `app.route('*', handler)` to handle all routes
 that didn't match anything else.
 
 ### Querystrings
+
 Querystrings (e.g. `?foo=bar`) are ignored when matching routes. An object
 containing the key-value mappings exists as `state.query`.
 
 ### Hash routing
+
 By default, hashes are ignored when routing. When enabling hash routing
 (`choo({ hash: true })`) hashes will be treated as part of the url, converting
 `/foo#bar` to `/foo/bar`. This is useful if the application is not mounted at
@@ -292,10 +319,12 @@ there's an anchor on the same page, and will scroll the element into view. Using
 both hashes in URLs and anchor links on the page is generally not recommended.
 
 ### Following links
+
 By default all clicks on `<a>` tags are handled by the router through the
 [nanohref](https://github.com/choojs/nanohref) module. This can be
 disabled application-wide by passing `{ href: false }` to the application
 constructor. The event is not handled under the following conditions:
+
 - the click event had `.preventDefault()` called on it
 - the link has a `target="_blank"` attribute with `rel="noopener noreferrer"`
 - a modifier key is enabled (e.g. `ctrl`, `alt`, `shift` or `meta`)
@@ -308,26 +337,28 @@ constructor. The event is not handled under the following conditions:
 pages](https://mathiasbynens.github.io/rel-noopener/).
 
 ### Navigating programmatically
+
 To navigate routes you can emit `'pushState'`, `'popState'` or
 `'replaceState'`. See [#events](#events) for more details about these events.
 
 ## Server Rendering
+
 Choo was built with Node in mind. To render on the server call
 `.toString(route, [state])` on your `choo` instance.
 
 ```js
-var html = require('choo/html')
-var choo = require('choo')
+var html = require("choo/html");
+var choo = require("choo");
 
-var app = choo()
-app.route('/', function (state, emit) {
-  return html`<div>Hello ${state.name}</div>`
-})
+var app = choo();
+app.route("/", function (state, emit) {
+  return html`<div>Hello ${state.name}</div>`;
+});
 
-var state = { name: 'Node' }
-var string = app.toString('/', state)
+var state = { name: "Node" };
+var string = app.toString("/", state);
 
-console.log(string)
+console.log(string);
 // => '<div>Hello Node</div>'
 ```
 
@@ -343,14 +374,16 @@ the `window` object.
 ```html
 <html>
   <head>
-    <script>window.initialState = { initial: 'state' }</script>
+    <script>
+      window.initialState = { initial: "state" };
+    </script>
   </head>
-  <body>
-  </body>
+  <body></body>
 </html>
 ```
 
 ## Components
+
 From time to time there will arise a need to have an element in an application
 hold a self-contained state or to not rerender when the application does. This
 is common when using 3rd party libraries to e.g. display an interactive map or a
@@ -360,72 +393,73 @@ Components come baked in to Choo for these kinds of situations. See
 
 ```javascript
 // map.js
-var html = require('choo/html')
-var mapboxgl = require('mapbox-gl')
-var Component = require('choo/component')
+var html = require("choo/html");
+var mapboxgl = require("mapbox-gl");
+var Component = require("choo/component");
 
 module.exports = class Map extends Component {
-  constructor (id, state, emit) {
-    super(id)
-    this.local = state.components[id] = {}
+  constructor(id, state, emit) {
+    super(id);
+    this.local = state.components[id] = {};
   }
 
-  load (element) {
+  load(element) {
     this.map = new mapboxgl.Map({
       container: element,
-      center: this.local.center
-    })
+      center: this.local.center,
+    });
   }
 
-  update (center) {
+  update(center) {
     if (center.join() !== this.local.center.join()) {
-      this.map.setCenter(center)
+      this.map.setCenter(center);
     }
-    return false
+    return false;
   }
 
-  createElement (center) {
-    this.local.center = center
-    return html`<div></div>`
+  createElement(center) {
+    this.local.center = center;
+    return html`<div></div>`;
   }
-}
+};
 ```
 
 ```javascript
 // index.js
-var choo = require('choo')
-var html = require('choo/html')
-var Map = require('./map.js')
+var choo = require("choo");
+var html = require("choo/html");
+var Map = require("./map.js");
 
-var app = choo()
-app.route('/', mainView)
-app.mount('body')
+var app = choo();
+app.route("/", mainView);
+app.mount("body");
 
-function mainView (state, emit) {
+function mainView(state, emit) {
   return html`
     <body>
       <button onclick=${onclick}>Where am i?</button>
-      ${state.cache(Map, 'my-map').render(state.center)}
+      ${state.cache(Map, "my-map").render(state.center)}
     </body>
-  `
+  `;
 
-  function onclick () {
-    emit('locate')
+  function onclick() {
+    emit("locate");
   }
 }
 
 app.use(function (state, emitter) {
-  state.center = [18.0704503, 59.3244897]
-  emitter.on('locate', function () {
+  state.center = [18.0704503, 59.3244897];
+  emitter.on("locate", function () {
     window.navigator.geolocation.getCurrentPosition(function (position) {
-      state.center = [position.coords.longitude, position.coords.latitude]
-      emitter.emit('render')
-    })
-  })
-})
+      state.center = [position.coords.longitude, position.coords.latitude];
+      emitter.emit("render");
+    });
+  });
+});
 ```
 
 ### Caching components
+
 When working with stateful components, one will need to keep track of component
 instances – `state.cache` does just that. The component cache is a function
 which takes a component class and a unique id (`string`) as its first two
@@ -438,11 +472,13 @@ starting to evict the least-recently-used instances. This behavior can be
 overriden with [options](#app--chooopts).
 
 ## Optimizations
+
 Choo is reasonably fast out of the box. But sometimes you might hit a scenario
 where a particular part of the UI slows down the application, and you want to
 speed it up. Here are some optimizations that are possible.
 
 ### Caching DOM elements
+
 Sometimes we want to tell the algorithm to not evaluate certain nodes (and its
 children). This can be because we're sure they haven't changed, or perhaps
 because another piece of code is managing that part of the DOM tree. To achieve
@@ -450,15 +486,16 @@ this `nanomorph` evaluates the `.isSameNode()` method on nodes to determine if
 they should be updated or not.
 
 ```js
-var el = html`<div>node</div>`
+var el = html`<div>node</div>`;
 
 // tell nanomorph to not compare the DOM tree if they're both divs
 el.isSameNode = function (target) {
-  return (target && target.nodeName && target.nodeName === 'DIV')
-}
+  return target && target.nodeName && target.nodeName === "DIV";
+};
 ```
 
 ### Reordering lists
+
 It's common to work with lists of elements on the DOM. Adding, removing or
 reordering elements in a list can be rather expensive. To optimize this you can
 add an `id` attribute to a DOM node. When reordering nodes it will compare
@@ -471,10 +508,11 @@ var el = html`
     <div id="first">hello</div>
     <div id="second">world</div>
   </section>
-`
+`;
 ```
 
 ### Pruning dependencies
+
 We use the `require('assert')` module from Node core to provide helpful error
 messages in development. In production you probably want to strip this using
 [unassertify][unassertify].
@@ -487,7 +525,9 @@ Setting up browserify transforms can sometimes be a bit of hassle; to make this
 more convenient we recommend using [bankai build][bankai] to build your assets for production.
 
 ## FAQ
+
 ### Why is it called Choo?
+
 Because I thought it sounded cute. All these programs talk about being
 _"performant"_, _"rigid"_, _"robust"_ - I like programming to be light, fun and
 non-scary. Choo embraces that.
@@ -497,11 +537,13 @@ critical for serious bizcorp using a train themed framework.
 :steam_locomotive::train::train::train:
 
 ### Is it called Choo, Choo.js or...?
+
 It's called "Choo", though we're fine if you call it "Choo-choo" or
 "Chugga-chugga-choo-choo" too. The only time "choo.js" is tolerated is if /
 when you shimmy like you're a locomotive.
 
 ### Does Choo use a virtual-dom?
+
 Choo uses [nanomorph][nanomorph], which diffs real DOM nodes instead of
 virtual nodes. It turns out that [browsers are actually ridiculously good at
 dealing with DOM nodes][morphdom-bench], and it has the added benefit of
@@ -509,36 +551,43 @@ working with _any_ library that produces valid DOM nodes. So to put a long
 answer short: we're using something even better.
 
 ### How can I support older browsers?
+
 Template strings aren't supported in all browsers, and parsing them creates
 significant overhead. To optimize we recommend running `browserify` with
 [nanohtml][nanohtml] as a global transform or using [bankai][bankai] directly.
+
 ```sh
 $ browserify -g nanohtml
 ```
 
 ### Is choo production ready?
+
 Sure.
 
 ## API
+
 This section provides documentation on how each function in Choo works. It's
 intended to be a technical reference. If you're interested in learning choo for
 the first time, consider reading through the [handbook][handbook] first
 :sparkles:
 
 ### `app = choo([opts])`
+
 Initialize a new `choo` instance. `opts` can also contain the following values:
-- __opts.history:__ default: `true`. Listen for url changes through the
+
+- **opts.history:** default: `true`. Listen for url changes through the
   history API.
-- __opts.href:__ default: `true`. Handle all relative `<a
-  href="<location>"></a>` clicks and call `emit('render')`
-- __opts.cache:__ default: `undefined`. Override default class cache used by
+- **opts.href:** default: `true`. Handle all relative `<a
+href="<location>"></a>` clicks and call `emit('render')`
+- **opts.cache:** default: `undefined`. Override default class cache used by
   `state.cache`. Can be a a `number` (maximum number of instances in cache,
   default `100`) or an `object` with a [nanolru][nanolru]-compatible API.
-- __opts.hash:__ default: `false`. Treat hashes in URLs as part of the pathname,
+- **opts.hash:** default: `false`. Treat hashes in URLs as part of the pathname,
   transforming `/foo#bar` to `/foo/bar`. This is useful if the application is
   not mounted at the website root.
 
 ### `app.use(callback(state, emitter, app))`
+
 Call a function and pass it a `state`, `emitter` and `app`. `emitter` is an instance
 of [nanobus](https://github.com/choojs/nanobus/). You can listen to
 messages by calling `emitter.on()` and emit messages by calling
@@ -551,6 +600,7 @@ the callback during tracing.
 See [#events](#events) for an overview of all events.
 
 ### `app.route(routeName, handler(state, emit))`
+
 Register a route on the router. The handler function is passed `app.state`
 and `app.emitter.emit` as arguments. Uses [nanorouter][nanorouter] under the
 hood.
@@ -558,6 +608,7 @@ hood.
 See [#routing](#routing) for an overview of how to use routing efficiently.
 
 ### `app.mount(selector)`
+
 Start the application and mount it on the given `querySelector`,
 the given selector can be a String or a DOM element.
 
@@ -570,30 +621,36 @@ When doing server side rendering, you can then check the `app.selector` property
 Returns `this`, so you can easily export the application for server side rendering:
 
 ```js
-module.exports = app.mount('body')
+module.exports = app.mount("body");
 ```
 
 ### `tree = app.start()`
+
 Start the application. Returns a tree of DOM nodes that can be mounted using
 `document.body.appendChild()`.
 
 ### `app.toString(location, [state])`
+
 Render the application to a string. Useful for rendering on the server.
 
 ### `choo/html`
+
 Create DOM nodes from template string literals. Exposes
 [nanohtml](https://github.com/choojs/nanohtml). Can be optimized using
 [nanohtml][nanohtml].
 
 ### `choo/html/raw`
+
 Exposes [nanohtml/raw](https://github.com/shama/nanohtml#unescaping) helper for rendering raw HTML content.
 
 ## Installation
+
 ```sh
 $ npm install choo
 ```
 
 ## See Also
+
 - [bankai](https://github.com/choojs/bankai) - streaming asset compiler
 - [stack.gl](http://stack.gl/) - open software ecosystem for WebGL
 - [yo-yo](https://github.com/maxogden/yo-yo) - tiny library for modular UI
@@ -603,6 +660,7 @@ $ npm install choo
   `browserify`
 
 ## Support
+
 Creating a quality framework takes a lot of time. Unlike others frameworks,
 Choo is completely independently funded. We fight for our users. This does mean
 however that we also have to spend time working contracts to pay the bills.
@@ -610,6 +668,7 @@ This is where you can help: by chipping in you can ensure more time is spent
 improving Choo rather than dealing with distractions.
 
 ### Sponsors
+
 Become a sponsor and help ensure the development of independent quality
 software. You can help us keep the lights on, bellies full and work days sharp
 and focused on improving the state of the web. [Become a
@@ -647,6 +706,7 @@ sponsor](https://opencollective.com/choo#sponsor)
 <a href="https://opencollective.com/choo/sponsor/29/website" target="_blank"><img src="https://opencollective.com/choo/sponsor/29/avatar.svg"></a>
 
 ### Backers
+
 Become a backer, and buy us a coffee (or perhaps lunch?) every month or so.
 [Become a backer](https://opencollective.com/choo#backer)
 
@@ -682,6 +742,7 @@ Become a backer, and buy us a coffee (or perhaps lunch?) every month or so.
 <a href="https://opencollective.com/choo/backer/29/website" target="_blank"><img src="https://opencollective.com/choo/backer/29/avatar.svg"></a>
 
 ## License
+
 [MIT](https://tldrlegal.com/license/mit-license)
 
 [nanocomponent]: https://github.com/choojs/nanocomponent
